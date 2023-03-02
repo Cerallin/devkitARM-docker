@@ -3,7 +3,7 @@ FROM ubuntu:latest
 
 RUN apt-get update && apt-get upgrade -y && \
     apt-get install -y --no-install-recommends apt-utils && \
-    apt-get install -y --no-install-recommends sudo ca-certificates pkg-config curl wget bzip2 xz-utils make bsdtar doxygen gnupg && \
+    apt-get install -y --no-install-recommends sudo ca-certificates pkg-config curl wget bzip2 make gnupg && \
     apt-get install -y --no-install-recommends git git-restore-mtime && \
     apt-get install -y --no-install-recommends zip unzip && \
     apt-get install -y --no-install-recommends locales && \
