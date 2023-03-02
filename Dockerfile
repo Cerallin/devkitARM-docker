@@ -18,6 +18,7 @@ RUN apt-get update && apt-get upgrade -y && \
 
 RUN wget https://apt.devkitpro.org/install-devkitpro-pacman && \
     chmod +x ./install-devkitpro-pacman && \
+    sed -i 's_apt-get install_apt-get install -y_' ./install-devkitpro-pacman && \
     ./install-devkitpro-pacman && \
     rm ./install-devkitpro-pacman && \
     yes | dkp-pacman -Scc
