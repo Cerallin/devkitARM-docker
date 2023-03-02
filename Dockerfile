@@ -23,7 +23,8 @@ RUN wget https://apt.devkitpro.org/install-devkitpro-pacman && \
     rm ./install-devkitpro-pacman && \
     yes | dkp-pacman -Scc
 
-RUN dkp-pacman -Syyu --noconfirm 3ds-dev nds-dev gp32-dev gba-dev gp2x-dev && \
+RUN ln -s /proc/self/mounts /etc/mtab; \
+    dkp-pacman -Syyu --noconfirm 3ds-dev nds-dev gp32-dev gba-dev gp2x-dev && \
     dkp-pacman -S --needed --noconfirm 3ds-portlibs nds-portlibs armv4t-portlibs && \
     yes | dkp-pacman -Scc
 
