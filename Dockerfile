@@ -1,5 +1,5 @@
 # Forked from https://github.com/devkitPro/docker/blob/master/toolchain-base/Dockerfile
-FROM ubuntu:lastest
+FROM ubuntu:latest
 
 RUN apt-get update && apt-get upgrade -y && \
     apt-get install -y --no-install-recommends apt-utils && \
