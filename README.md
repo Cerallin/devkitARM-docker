@@ -1,2 +1,2 @@
-# devkitProARM-action
-Docker for devkitProARM
+# devkitARM-docker
+Docker for devkitARM based on ubuntu:latest
