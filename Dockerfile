@@ -31,8 +31,7 @@ RUN ln -s /proc/self/mounts /etc/mtab; \
 
 ENV LANG en_US.UTF-8
 
+# Setup env
 ENV DEVKITPRO=/opt/devkitpro
-
 ENV DEVKITARM=${DEVKITPRO}/devkitARM
-
 ENV PATH=${DEVKITPRO}/tools/bin:$PATH
