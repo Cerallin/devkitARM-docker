@@ -13,7 +13,7 @@ RUN apt-get update && apt-get upgrade -y && \
     apt-get install -y --no-install-recommends ssh cppcheck && \
     apt-get install -y --no-install-recommends libfreeimage3 libfreeimage-dev && \
     apt-get install -y --no-install-recommends cmake vim && \
-    apt-get install -y --no-install-recommends autoconf-archive autoconf-doc libtool && \
+    apt-get install -y --no-install-recommends automake autoconf autoconf-archive autoconf-doc libtool && \
     sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     dpkg-reconfigure --frontend=noninteractive locales && \
     update-locale LANG=en_US.UTF-8 && \
