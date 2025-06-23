@@ -32,21 +32,6 @@ ENV DEVKITPRO=/opt/devkitpro
 ENV DEVKITARM=${DEVKITPRO}/devkitARM
 ENV PATH=${DEVKITPRO}/tools/bin:$PATH
 
-# Setup develop user
-ARG USERNAME=julia
-ARG USER_UID=1000
-ARG USER_GID=$USER_UID
-
-# Create the user
-RUN groupadd --gid $USER_GID $USERNAME \
-    && useradd --uid $USER_UID --gid $USER_GID -s /bin/bash -m $USERNAME
-
-# Setup default user
-USER $USERNAME
-
-WORKDIR /home/julia
-RUN echo "export PATH=\$HOME/.local/bin:\$PATH" >> $HOME/.bashrc
-
 # Install libgrape
 RUN git clone https://github.com/Cerallin/libgrape.git libgrape
 RUN cd libgrape && \
