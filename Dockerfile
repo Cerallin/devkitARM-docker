@@ -1,27 +1,58 @@
-# Forked from https://github.com/devkitPro/docker/blob/master/toolchain-base/Dockerfile
-FROM devkitpro/devkitarm
+# Copied from https://github.com/devkitPro/docker/blob/master/toolchain-base/Dockerfile
+# Maintainer: Cerallin <cerallin@cerallin.top>
+# Based on devkitPro's toolchain-base image
+# Version: 20241104 libnds=1.8.0
+# Description: Docker image for developing homebrew applications for the Nintendo DS
 
-RUN apt-get update && apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends apt-utils && \
-    apt-get install -y --no-install-recommends sudo ca-certificates curl wget bzip2 make gnupg && \
-    apt-get install -y --no-install-recommends git git-restore-mtime && \
-    apt-get install -y --no-install-recommends zip unzip && \
-    apt-get install -y --no-install-recommends locales && \
-    apt-get install -y --no-install-recommends patch && \
-    apt-get install -y --no-install-recommends gcc g++ && \
-    apt-get install -y --no-install-recommends imagemagick && \
-    apt-get install -y --no-install-recommends ssh cppcheck && \
-    apt-get install -y --no-install-recommends libfreeimage3 libfreeimage-dev && \
-    apt-get install -y --no-install-recommends cmake vim && \
-    apt-get install -y --no-install-recommends automake autoconf autoconf-archive autoconf-doc libtool && \
-    sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
-    dpkg-reconfigure --frontend=noninteractive locales && \
-    update-locale LANG=en_US.UTF-8 && \
-    apt-get clean
+FROM devkitpro/devkitarm:20241104
 
-ENV LANG en_US.UTF-8
+# update apt repositories and upgrade packages
+RUN apt-get update && apt-get upgrade -y
+RUN apt-get install -y --no-install-recommends apt-utils
+RUN apt-get install -y --no-install-recommends sudo ssh ca-certificates curl wget bzip2 gnupg
+RUN apt-get install -y --no-install-recommends zip unzip patch vim
+RUN apt-get install -y --no-install-recommends git git-restore-mtime
+RUN apt-get install -y --no-install-recommends gcc g++
+RUN apt-get install -y --no-install-recommends gdb cppcheck make
+RUN apt-get install -y --no-install-recommends cmake automake autoconf autoconf-archive autoconf-doc libtool
+RUN apt-get install -y --no-install-recommends libfreeimage3 libfreeimage-dev
+RUN apt-get install -y --no-install-recommends imagemagick
+
+# locale
+RUN apt-get install -y --no-install-recommends locales
+RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+RUN dpkg-reconfigure --frontend=noninteractive locales
+RUN update-locale LANG=en_US.UTF-8
+RUN apt-get clean
+
+ENV LANG=en_US.UTF-8
 
 # Setup env
 ENV DEVKITPRO=/opt/devkitpro
 ENV DEVKITARM=${DEVKITPRO}/devkitARM
 ENV PATH=${DEVKITPRO}/tools/bin:$PATH
+
+# Setup develop user
+ARG USERNAME=julia
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+
+# Create the user
+RUN groupadd --gid $USER_GID $USERNAME \
+    && useradd --uid $USER_UID --gid $USER_GID -s /bin/bash -m $USERNAME
+
+# Setup default user
+USER $USERNAME
+
+WORKDIR /home/julia
+RUN echo "export PATH=\$HOME/.local/bin:\$PATH" >> $HOME/.bashrc
+
+# Install libgrape
+RUN git clone https://github.com/Cerallin/libgrape.git libgrape
+RUN cd libgrape && \
+    git checkout v1.0.2 && \
+    git submodule update --init && \
+    mkdir -p build && cd build && \
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$HOME/.grape .. && \
+    make -j$(nproc) && \
+    make install
